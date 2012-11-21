@@ -1,0 +1,3 @@
+[submodule "plugins/markasjunk2"]
+	path = plugins/markasjunk2
+	url = https://github.com/mamash/Roundcube-Plugin-Mark-as-Junk-2.git
