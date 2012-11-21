@@ -106,7 +106,7 @@ abstract class rcube_plugin
    */
   public function load_config($fname = 'config.inc.php')
   {
-    $fpath = $this->home.'/'.$fname;
+    $fpath = RCMAIL_CONFIG_DIR.'/'.get_class($this).'/'.$fname;
     $rcmail = rcmail::get_instance();
     if (is_file($fpath) && !$rcmail->config->load_from_file($fpath)) {
       raise_error(array('code' => 527, 'type' => 'php',
