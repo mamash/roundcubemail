@@ -112,7 +112,7 @@ class rcube_mdb2
             if (!filesize($dsn_array['database']) && !empty($this->sqlite_initials))
                 $this->_sqlite_create_database($dbh, $this->sqlite_initials);
         }
-        else if ($this->db_provider!='mssql' && $this->db_provider!='sqlsrv')
+        else if ($this->db_provider!='mssql' && $this->db_provider!='sqlsrv' && $this->db_provider!='pdoSqlite')
             $dbh->setCharset('utf8');
 
         return $dbh;
@@ -277,7 +277,7 @@ class rcube_mdb2
         if (!$this->is_connected())
             return null;
 
-        if ($this->db_provider == 'sqlite')
+        if ($this->db_provider == 'sqlite' || $this->db_provider=='pdoSqlite')
             $this->_sqlite_prepare();
 
         if ($numrows || $offset)
@@ -791,6 +791,12 @@ class rcube_mdb2
         include_once(INSTALL_PATH . 'program/include/rcube_sqlite.inc');
 
         // we emulate via callback some missing MySQL function
+        if ($this->db_provider=='pdoSqlite') {
+          $this->db_handle->connection->sqliteCreateFunction('from_unixtime', 'rcube_sqlite_from_unixtime');
+          $this->db_handle->connection->sqliteCreateFunction('unix_timestamp', 'rcube_sqlite_unix_timestamp');
+          $this->db_handle->connection->sqliteCreateFunction('now', 'rcube_sqlite_now');
+          $this->db_handle->connection->sqliteCreateFunction('md5', 'rcube_sqlite_md5');
+        } else {
         sqlite_create_function($this->db_handle->connection,
             'from_unixtime', 'rcube_sqlite_from_unixtime');
         sqlite_create_function($this->db_handle->connection,
@@ -799,6 +805,7 @@ class rcube_mdb2
             'now', 'rcube_sqlite_now');
         sqlite_create_function($this->db_handle->connection,
             'md5', 'rcube_sqlite_md5');
+        }
     }
 
 
