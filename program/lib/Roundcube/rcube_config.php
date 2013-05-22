@@ -71,9 +71,15 @@ class rcube_config
         if (!$this->load_from_file(RCUBE_CONFIG_DIR . 'main.inc.php'))
             $this->errors[] = 'main.inc.php was not found.';
 
+        // load local main config file
+        $this->load_from_file(RCUBE_CONFIG_DIR . 'main-local.inc.php');
+
         // load database config
         if (!$this->load_from_file(RCUBE_CONFIG_DIR . 'db.inc.php'))
             $this->errors[] = 'db.inc.php was not found.';
+
+        // load local database config file
+        $this->load_from_file(RCUBE_CONFIG_DIR . 'db-local.inc.php');
 
         // load host-specific configuration
         $this->load_host_config();
